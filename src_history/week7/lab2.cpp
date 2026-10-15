@@ -25,7 +25,7 @@
 
 byte task = TASK_DEFAULT;
 byte step = 0;
-unsigned long interval = INTVL;
+const unsigned long INTERVAL = INTVL;
 unsigned long last_frame = 0;
 long dinterval = 0;
 
@@ -103,7 +103,7 @@ void loop(void) {
 
 void adjust_interval(long diff) {
   long d = dinterval + diff;
-  long i = interval + d;
+  long i = INTERVAL + d;
   if (i > 500) {
     dinterval = -200;
   } else if (i < 100) {
@@ -114,7 +114,7 @@ void adjust_interval(long diff) {
 }
 
 bool time_up(void) {
-  return millis() - last_frame >= interval + dinterval;
+  return millis() - last_frame >= INTERVAL + dinterval;
 }
 
 void execute_task(void) {
