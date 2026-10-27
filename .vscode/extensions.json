@@ -1,11 +1,13 @@
 {
-  // VS Code 가 이 프로젝트를 열면 아래 확장 설치를 자동으로 권합니다.
-  "recommendations": [
-    "platformio.platformio-ide"
-  ],
-  // 설치하면 충돌하거나 혼란을 주는 확장들
-  "unwantedRecommendations": [
-    "vsciot-vscode.vscode-arduino",
-    "ms-vscode.cmake-tools"
-  ]
+    // See http://go.microsoft.com/fwlink/?LinkId=827846
+    // for the documentation about the extensions.json format
+    "recommendations": [
+        "platformio.platformio-ide"
+    ],
+    "unwantedRecommendations": [
+        "ms-vscode.cmake-tools",
+        "ms-vscode.cpptools-extension-pack",
+        "pioarduino.pioarduino-ide",
+        "vsciot-vscode.vscode-arduino"
+    ]
 }
