@@ -1,100 +1,39 @@
 #include <Arduino.h>
+#include "serial.hpp"
+#include "led.hpp"
 
-#define FIRST_SW 2
-#define SW_NO 3
-#define FIRST_LED 5
-#define LED_NO 8
+#define CDS_PIN A1
+#define THRESHOLD 600
 
-byte prev_sw = 0x00;
-
-void led_write(byte value) { // active low
-  value = ~value;
-  for (int i = 0; i < LED_NO; ++i) {
-    digitalWrite(FIRST_LED + i, (value >> i) & 1);
-  }
+byte extract_pattern(void) {
+  static byte count = 245; // 0으로 돌아가는 결과를 빨리 보기 위해...
+  ++count;                 // byte(uint8_t) => [0, 255] circulate
+  return count;
 }
 
-void led_shift(int shift_no, int speed) {
-  for (int c = 0; c < shift_no; ++c) {
-    for (int i = 0; i < LED_NO - 1; ++i) {
-      led_write(0x01 << i);
-      delay(speed);
-    }
-    for (int i = LED_NO - 1; i > 0; --i) {
-      led_write(0x01 << i);
-      delay(speed);
-    }
+void control_lighting(int cds) {
+  static bool prev = false;
+  bool covered = cds < THRESHOLD;
+  if (!prev && covered) {
+    byte p = extract_pattern();
+    print("count=%hhu\n", p);
+    led_write(p);
   }
-  led_write(0x01);
-  delay(speed);
-  led_write(0x00);
+  prev = covered;
 }
 
-void led_alternate(int alt_no, int speed) {
-  for (int c = 0; c < alt_no; ++c) {
-    led_write(0xAA);
-    delay(speed);
-    led_write(~0xAA);
-    delay(speed);
-  }
-  led_write(0x00);
-}
-
-void led_cross(int cross_no, int speed) {
-  for (int c = 0; c < cross_no; ++c) {
-    for (int i = 0; i < (LED_NO >> 1) - 1; ++i) {
-      led_write((0x80 >> i) | (0x01 << i));
-      delay(speed);
-    }
-    for (int i = LED_NO >> 1; i < LED_NO - 1; ++i) {
-      led_write((0x80 >> i) | (0x01 << i));
-      delay(speed);
-    }
-  }
-  led_write(0x81);
-  delay(speed);
-  led_write(0x00);
-}
-
-byte sw_read() { // active low
-  byte value = 0x00;
-  for (int i = 0; i < SW_NO; ++i) {
-    value |= !digitalRead(FIRST_SW + i) << i;
-  }
-  return value;
-}
-
-byte sw_pressed() {
-  byte curr = sw_read();
-  Serial.print("curr=");
-  Serial.println(curr);
-  byte edge = curr & (~prev_sw);
-  prev_sw = curr;
-  return edge;
-}
-
-void setup() {
-  for (int i = 0; i < SW_NO; ++i) {
-    pinMode(FIRST_SW + i, INPUT_PULLUP);
-  }
-
+void setup(void) {
   for (int i = 0; i < LED_NO; ++i) {
     pinMode(FIRST_LED + i, OUTPUT);
   }
-  led_write(0x00);
+
   Serial.begin(9600);
+  delay(200);
+  led_write(ALL_OFF);
 }
 
-void loop() {
-  byte pressed = sw_pressed();
-
-  if (pressed & 0x01) {
-    led_shift(2, 100);
-  } else if (pressed & 0x02) {
-    led_alternate(2, 300);
-  } else if (pressed & 0x04) {
-    led_cross(2, 200);
-  }
-
-  delay(10);
+void loop(void) {
+  int v = analogRead(CDS_PIN);
+  control_lighting(v);
+  delay(200);
 }
