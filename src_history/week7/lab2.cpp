@@ -7,11 +7,18 @@
 #define SW2 11 // PCINT3
 #define SW3 12 // PCINT4
 
-#define TASK_NO 4
-#define TASK_DEFAULT 0
-#define TASK_1 1
-#define TASK_2 2
-#define TASK_3 3
+typedef enum task {
+	TASK_DEFAULT = 0,
+	TASK_1,
+	TASK_2,
+	TASK_3,
+	TASK_NO,
+} task_t;
+//#define TASK_NO 4
+//#define TASK_DEFAULT 0
+//#define TASK_1 1
+//#define TASK_2 2
+//#define TASK_3 3
 
 #define STEP_DEFAULT 2
 #define STEP_TASK_1 2
@@ -23,7 +30,7 @@
 
 #define MAX_INTERVAL 500
 
-byte task = TASK_DEFAULT;
+task_t task = TASK_DEFAULT;
 byte step = 0;
 const unsigned long INTERVAL = INTVL;
 unsigned long last_frame = 0;
