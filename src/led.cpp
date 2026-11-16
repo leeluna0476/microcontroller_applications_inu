@@ -1,10 +1,16 @@
 #include "led.hpp"
 
+void setup_led(void) {
+  for (int i = 0; i < LED_NO; ++i) {
+    pinMode(FIRST_LED + i, OUTPUT);
+  }
+}
 void led_write(byte val) {
   val = ~val;
   for (int i = 0; i < LED_NO; ++i) {
     digitalWrite(FIRST_LED + i, (val >> i) & 1);
   }
+  Serial.print('\n');
 }
 
 void led_all_onoff(int no, int speed) {
@@ -14,4 +20,12 @@ void led_all_onoff(int no, int speed) {
     led_write(ALL_OFF);
     delay(speed);
   }
+}
+
+byte led_no(byte no) {
+  byte v = 0;
+  for (byte i = 0; i < no; ++i) {
+    v |= 1 << i;
+  }
+  return v;
 }

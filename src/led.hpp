@@ -19,7 +19,9 @@
 #define ALL_OFF 0x00
 #endif
 
+void setup_led(void);
 void led_write(byte val);
 void led_all_onoff(int no, int speed);
+byte led_no(byte no);
 
 #endif
