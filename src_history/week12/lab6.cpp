@@ -10,6 +10,7 @@
 
 unsigned long calc_speed(float d);
 void set_oc(volatile uint8_t* tccr, bool on);
+void turn_off_buzzer(uint8_t buzz, volatile uint8_t* tccr);
 void control_buzzer(float d);
 float read_distance(void);
 
@@ -69,6 +70,9 @@ void control_buzzer(float d) {
         prev_state = 2;
       }
     }
+    if (!on) {
+      turn_off_buzzer(BUZZ, &TCCR2A);
+    }
   }
 }
 
@@ -78,6 +82,11 @@ void set_oc(volatile uint8_t* tccr, bool on) {
   } else {
     *tccr &= ~(1 << COM2A0);
   }
+}
+
+void turn_off_buzzer(uint8_t buzz, volatile uint8_t* tccr) {
+  set_oc(tccr, false);
+  digitalWrite(buzz, LOW);
 }
 
 float read_distance(void) {
