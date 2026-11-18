@@ -19,7 +19,7 @@ void setup(void) {
   pinMode(ECHO, INPUT);
 
   pinMode(BUZZ, OUTPUT);
-  setup_timer2_ctc(false, PRESCALER, FREQ);
+  setup_timer2a_ctc(false, PRESCALER, FREQ);
 }
 
 void loop(void) {

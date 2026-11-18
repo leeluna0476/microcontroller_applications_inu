@@ -1,7 +1,7 @@
 #include "buzz.hpp"
 
 // CTC: Timer/Counter Top == OCR2A. turn off.
-void setup_timer2_ctc(bool oc_on, unsigned int presc, unsigned int freq) {
+void setup_timer2a_ctc(bool oc_on, unsigned int presc, unsigned int freq) {
   TCCR2A = 0x00; // turn off timer while setup
   TCCR2B = 0x00;
 

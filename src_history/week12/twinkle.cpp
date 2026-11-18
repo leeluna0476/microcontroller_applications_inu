@@ -17,7 +17,7 @@ void loop(void) {
   static uint8_t n = 0;
   static uint8_t cnt = 0;
   if (!cnt || (n != 3 && n != 7)) { // change notes
-    setup_timer2_ctc(true, PRESCALER, notes[n]);
+    setup_timer2a_ctc(true, PRESCALER, notes[n]);
   }
 
   if (cnt || (n != 3 && n != 7)) { // rest on a beat
